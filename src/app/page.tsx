@@ -7,15 +7,13 @@ import { HomeClient } from "./_components/home-client";
 import { TaskManager } from "./_components/task-manager";
 import { Login } from "./_components/login";
 import toast, { Toaster } from 'react-hot-toast';
-
-export default async function Home() {
-
-  //define functions
+import AdminPanelLayout from "./_components/admin-panel/admin-panel-layout";
 
 
-  return (
-    <main className="flex bg-[url('~/public/img/backglogin.png')] bg-cover bg-center  w-fullflex flex-col h-screen justify-center items-center text-white ">
-      <Login/>
-    </main>
-  );
+export default async function Home({
+  children
+}: {
+  children: React.ReactNode;
+}) {
+  return <AdminPanelLayout>{children}</AdminPanelLayout>;
 }

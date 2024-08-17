@@ -2,6 +2,12 @@ import type { Config } from "tailwindcss"
 const { fontFamily } = require("tailwindcss/defaultTheme")
 
 const config = {
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./*"]
+    }
+  },
   darkMode: ["class"],
   content: [
     './pages/**/*.{ts,tsx}',
@@ -39,6 +45,8 @@ const config = {
       colors: {
         'primary-orange': '#FE725D', 
       },
+      backgroundImage: {
+        'login-bg': "url('/img/backgLogin.png')",}
     },
   },
   plugins: [require("tailwindcss-animate")],

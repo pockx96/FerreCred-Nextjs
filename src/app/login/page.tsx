@@ -3,7 +3,7 @@ import { CardLogin } from "~/components/ui/card-login";
 
 const LoginPage = () => {
   return (
-    <main className="w-fullflex flex h-screen flex-col items-center justify-center bg-[url('~/public/img/backglogin.png')] bg-cover bg-center text-white">
+    <main className="w-fullflex flex bg-login-bg h-screen flex-col items-center justify-center bg-cover bg-center text-white">
       <section className="flex h-full items-center">
         <CardLogin />
         <LoginForm />
