@@ -1,5 +1,5 @@
-import { LoginForm } from "~/components/ui/login-form";
-import { CardLogin } from "~/components/ui/card-login";
+import { CardLogin } from "~/app/_components/login/card-login";
+import { LoginForm } from "../_components/login/login-form";
 
 const LoginPage = () => {
   return (

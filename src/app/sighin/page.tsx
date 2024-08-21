@@ -1,4 +1,4 @@
-import { CardLogin } from "~/components/ui/card-login";
+import { CardLogin } from "~/app/_components/login/card-login";
 import { SighInForm } from "~/components/ui/sigh-in-form";
 
 const SighinPage = () => {
