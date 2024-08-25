@@ -14,8 +14,10 @@ import { Label } from "~/components/ui/label";
 import { Check } from "lucide-react";
 import { Separator } from "~/components/ui/separator";
 import { Checkbox } from "./checkbox";
+import { getServerAuthSession } from "~/server/auth";
+import Link from "next/link";
 
-export function SighInForm() {
+export async function SighInForm() {
   return (
     <Card className="flex h-4/5 w-[380px] flex-col justify-between rounded-bl-none rounded-tl-none">
       <CardHeader>
@@ -50,7 +52,9 @@ export function SighInForm() {
         </form>
       </CardContent>
       <CardFooter className="flex flex-col">
-        <Button className="mb-4 w-3/4 rounded-full border border-gray-400 bg-white text-black">Registrate con google</Button>
+        <Button className="mb-4 w-3/4 rounded-full border border-gray-400 bg-white text-black">
+          Registrate con google
+        </Button>
         <div className="mb-4 flex items-center space-x-2">
           <Checkbox id="terms" />
           <label
