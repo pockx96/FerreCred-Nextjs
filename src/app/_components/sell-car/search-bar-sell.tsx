@@ -1,16 +1,27 @@
+import { Input } from "@/components/ui/input";
+import SearchResults from './search-bar-results';
+import { useState } from 'react';
+import { TableBody, TableCell, TableRow } from "~/components/ui/table";
 
-import { Input } from "@/components/ui/input"
+function SearchBarSell({ setSearchTerm }: { setSearchTerm: (term: string) => void }) {
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(event.target.value);
+  };
 
-export default function SeachBarSell() {
   return (
-    <div className="flex items-center w-1/2 space-x-2 rounded-lg h-3/4 border border-gray-300 bg-gray-50 dark:bg-gray-900 px-3.5 py-2 ">
+    <div className="flex items-center w-1/2 space-x-2 rounded-lg h-3/4 border border-gray-300 bg-gray-50 dark:bg-gray-900 px-3.5 py-2">
       <SearchIcon className="h-4 w-4" />
-      <Input type="search" placeholder="Search" className="w-full border-0 font-semibold" />
+      <Input
+        type="search"
+        placeholder="Search"
+        className="w-full border-0 font-semibold"
+        onChange={handleSearchChange}
+      />
     </div>
-  )
+  );
 }
 
-function SearchIcon(props:any) {
+function SearchIcon(props: any) {
   return (
     <svg
       {...props}
@@ -27,5 +38,16 @@ function SearchIcon(props:any) {
       <circle cx="11" cy="11" r="8" />
       <path d="m21 21-4.3-4.3" />
     </svg>
-  )
+  );
+}
+
+export default function SearchPage() {
+  const [searchTerm, setSearchTerm] = useState('');
+
+  return (
+    <div className="flex flex-col items-center space-y-4">
+      <SearchBarSell setSearchTerm={setSearchTerm} />
+      {searchTerm && <SearchResults searchTerm={searchTerm} />}
+    </div>
+  );
 }

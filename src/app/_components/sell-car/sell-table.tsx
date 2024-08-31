@@ -1,42 +1,47 @@
-'use client'
 import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-  } from "@/components/ui/table"
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
-import { api } from "~/trpc/react"
+interface Product {
+  code: string;
+  description: string;
+  weight: number;
+  price: number;
+}
 
-  export function SellTable() {
-    const products = api.product.getAll.useQuery()
-    return (
-      <Table className="w-full mt-6">
-        <TableHeader>
-          <TableRow>
-            <TableHead className="w-[100px]">Codigo</TableHead>
-            <TableHead>Cantidad</TableHead>
-            <TableHead>Descripción</TableHead>
-            <TableHead className="text-right">Peso</TableHead>
-            <TableHead>Precio</TableHead>
-            <TableHead>Importe</TableHead>
+interface SellTableProps {
+  products: Product[];
+}
+
+export function SellTable({ products }: SellTableProps) {
+  return (
+    <Table className="w-full mt-6">
+      <TableHeader>
+        <TableRow>
+          <TableHead className="w-[100px]">Codigo</TableHead>
+          <TableHead>Cantidad</TableHead>
+          <TableHead>Descripción</TableHead>
+          <TableHead className="text-right">Peso</TableHead>
+          <TableHead>Precio</TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        {products.map((product) => (
+          <TableRow key={product.code}>
+            <TableCell>{product.code}</TableCell>
+            <TableCell>1</TableCell> {/* Ajusta la cantidad según sea necesario */}
+            <TableCell>{product.description}</TableCell>
+            <TableCell className="text-right">{product.weight}</TableCell>
+            <TableCell>{product.price}</TableCell>
           </TableRow>
-        </TableHeader>
-        <TableBody>
-        {products.data &&
-        products.data.map((product) => (
-            <TableRow key={product.code}>
-              <TableCell className="font-medium">{product.code}</TableCell>
-              <TableCell>{product.stock}</TableCell>
-              <TableCell>{product.description}</TableCell>
-              <TableCell className="text-right">{product.weight}</TableCell>
-              <TableCell>{product.price}</TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    )
-  }
-  
+        ))}
+      </TableBody>
+    </Table>
+  );
+}
+
