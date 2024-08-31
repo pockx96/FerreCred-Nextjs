@@ -1,7 +1,20 @@
 import { api } from "~/trpc/react";
 import { useState } from "react";
 
-export default function SearchResults({ searchTerm }: { searchTerm: string }) {
+interface Product {
+  code: string;
+  description: string;
+  weight: number;
+  price: number;
+}
+
+export default function SearchResults({
+  searchTerm,
+  onSelectProduct,
+}: {
+  searchTerm: string;
+  onSelectProduct: (product: Product) => void;
+}) {
   const products = api.product.getAll.useQuery();
 
   const filteredProducts = products.data?.filter(
@@ -17,7 +30,13 @@ export default function SearchResults({ searchTerm }: { searchTerm: string }) {
   return (
     <ul className="list-disc pl-5">
       {filteredProducts.map((product) => (
-        <li key={product.code}>{product.description}</li>
+        <li
+          key={product.code}
+          onClick={() => onSelectProduct(product)}
+          className="cursor-pointer hover:bg-gray-200 p-2"
+        >
+          {product.description}
+        </li>
       ))}
     </ul>
   );

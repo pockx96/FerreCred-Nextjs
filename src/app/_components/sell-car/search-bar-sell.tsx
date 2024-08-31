@@ -1,7 +1,13 @@
 import { Input } from "@/components/ui/input";
 import SearchResults from './search-bar-results';
 import { useState } from 'react';
-import { TableBody, TableCell, TableRow } from "~/components/ui/table";
+
+interface Product {
+  code: string;
+  description: string;
+  weight: number;
+  price: number;
+}
 
 function SearchBarSell({ setSearchTerm }: { setSearchTerm: (term: string) => void }) {
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -41,13 +47,13 @@ function SearchIcon(props: any) {
   );
 }
 
-export default function SearchPage() {
+export default function SearchPage({ onSelectProduct }: { onSelectProduct: (product: Product) => void }) {
   const [searchTerm, setSearchTerm] = useState('');
 
   return (
     <div className="flex flex-col items-center space-y-4">
       <SearchBarSell setSearchTerm={setSearchTerm} />
-      {searchTerm && <SearchResults searchTerm={searchTerm} />}
+      {searchTerm && <SearchResults searchTerm={searchTerm} onSelectProduct={onSelectProduct} />}
     </div>
   );
 }
