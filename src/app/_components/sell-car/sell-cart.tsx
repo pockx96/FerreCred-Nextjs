@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import { useState, useMemo } from "react";
 import { PaySelection } from "./pay-selection";
@@ -28,23 +28,22 @@ export const SellCart = () => {
   }, [selectedProducts]);
 
   return (
-    <section className="flex flex-col w-full max-h-full">
-      <div className="flex justify-between">
-        <PaySelection />
+    <section className="flex max-h-full w-full flex-col">
+      <div className="flex items-center justify-start py-2">
         <SearchPage onSelectProduct={handleSelectProduct} />
       </div>
-      <div className="flex justify-start h-[20%]">
+      <div className="flex h-[20%] justify-start">
         <CardClient />
         <CardDebt />
       </div>
-      <div className="flex w-full my-2 justify-start">
+      <div className="my-2 flex w-full justify-start">
         <div className="w-full">
           <SellTable products={selectedProducts} />
         </div>
       </div>
-      <div className="flex justify-end h-2/5">
+      <div className="flex h-2/5 justify-end">
         <CardTotal total={totalPrice} />
       </div>
     </section>
   );
-}
+};

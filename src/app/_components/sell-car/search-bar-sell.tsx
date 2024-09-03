@@ -1,6 +1,6 @@
-import { Input } from "@/components/ui/input";
-import SearchResults from './search-bar-results';
-import { useState } from 'react';
+import SearchResults from "./search-bar-results";
+import { useState } from "react";
+import SearchBox from "./search-box";
 
 interface Product {
   code: string;
@@ -9,51 +9,23 @@ interface Product {
   price: number;
 }
 
-function SearchBarSell({ setSearchTerm }: { setSearchTerm: (term: string) => void }) {
-  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(event.target.value);
-  };
+
+export default function SearchBarSell({
+  onSelectProduct,
+}: {
+  onSelectProduct: (product: Product) => void;
+}) {
+  const [searchTerm, setSearchTerm] = useState("");
 
   return (
-    <div className="flex items-center w-1/2 space-x-2 rounded-lg h-3/4 border border-gray-300 bg-gray-50 dark:bg-gray-900 px-3.5 py-2">
-      <SearchIcon className="h-4 w-4" />
-      <Input
-        type="search"
-        placeholder="Search"
-        className="w-full border-0 font-semibold"
-        onChange={handleSearchChange}
-      />
-    </div>
-  );
-}
-
-function SearchIcon(props: any) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <circle cx="11" cy="11" r="8" />
-      <path d="m21 21-4.3-4.3" />
-    </svg>
-  );
-}
-
-export default function SearchPage({ onSelectProduct }: { onSelectProduct: (product: Product) => void }) {
-  const [searchTerm, setSearchTerm] = useState('');
-
-  return (
-    <div className="flex flex-col items-center space-y-4">
-      <SearchBarSell setSearchTerm={setSearchTerm} />
-      {searchTerm && <SearchResults searchTerm={searchTerm} onSelectProduct={onSelectProduct} />}
+    <div className="flex w-1/2 flex-col items-center space-y-4">
+      <SearchBox setSearchTerm={setSearchTerm} />
+      {searchTerm && (
+        <SearchResults
+          searchTerm={searchTerm}
+          onSelectProduct={onSelectProduct}
+        />
+      )}
     </div>
   );
 }
