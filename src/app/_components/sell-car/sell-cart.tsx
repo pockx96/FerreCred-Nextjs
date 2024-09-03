@@ -7,6 +7,7 @@ import { CardTotal } from "./card-total";
 import SearchPage from "./search-bar-sell";
 import { CardClient } from "./card-client";
 import { CardDebt } from "./card-debt";
+import { ButtonFinish } from "./button-finish";
 
 interface Product {
   code: string;
@@ -42,6 +43,7 @@ export const SellCart = () => {
         </div>
       </div>
       <div className="flex h-2/5 justify-end">
+        <ButtonFinish />
         <CardTotal total={totalPrice} />
       </div>
     </section>
