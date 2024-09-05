@@ -10,6 +10,7 @@ import {
 import { api } from "~/trpc/react";
 import { useState } from "react";
 import { Button } from "~/components/ui/button";
+import { Onest } from "next/font/google";
 
 interface Product {
   code: string;
@@ -32,23 +33,27 @@ export function SearchBarProducts({
       <CommandInput
         placeholder="Type a command or search..."
         onFocus={() => setIsFocused(true)}
-        onBlur={() => setIsFocused(false)}
       />
       <CommandList>
-        <ul>
+        <CommandEmpty>No results found.</CommandEmpty>
+        <CommandGroup
+          className={isFocused ? "" : "hidden"}
+          heading="Sugerencias"
+        >
           {products.data &&
             products.data.map((product) => (
-              <div>
-                <li
-                  key={product.code}
-                  onClick={() => onSelectProduct(product)}
-                  className="cursor-pointer p-2 hover:bg-gray-200"
+              <CommandItem key={product.code} onClick={onTest}>
+                <button
+                  onClick={() => {
+                    onSelectProduct(product);
+                    setIsFocused(false);
+                  }}
                 >
                   {product.description}
-                </li>
-              </div>
+                </button>
+              </CommandItem>
             ))}
-        </ul>
+        </CommandGroup>
       </CommandList>
     </Command>
   );
