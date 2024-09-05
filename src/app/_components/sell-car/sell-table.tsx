@@ -18,9 +18,12 @@ interface SellTableProps {
   products: Product[];
 }
 
+
 export function SellTable({ products }: SellTableProps) {
+  console.log("Productos en la tabla:", products);
+
   return (
-    <Table className="w-full mt-6">
+    <Table className="mt-6 w-full">
       <TableHeader>
         <TableRow>
           <TableHead className="w-[100px]">Codigo</TableHead>
@@ -31,17 +34,24 @@ export function SellTable({ products }: SellTableProps) {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {products.map((product) => (
-          <TableRow key={product.code}>
-            <TableCell>{product.code}</TableCell>
-            <TableCell>1</TableCell> {/* Ajusta la cantidad según sea necesario */}
-            <TableCell>{product.description}</TableCell>
-            <TableCell className="text-right">{product.weight}</TableCell>
-            <TableCell>{product.price}</TableCell>
+        {products.length > 0 ? (
+          products.map((product) => (
+            <TableRow key={product.code}>
+              <TableCell>{product.code}</TableCell>
+              <TableCell>1</TableCell>
+              <TableCell>{product.description}</TableCell>
+              <TableCell className="text-right">{product.weight}</TableCell>
+              <TableCell>{product.price}</TableCell>
+            </TableRow>
+          ))
+        ) : (
+          <TableRow>
+            <TableCell colSpan={5} className="text-center">
+              No products selected.
+            </TableCell>
           </TableRow>
-        ))}
+        )}
       </TableBody>
     </Table>
   );
 }
-
