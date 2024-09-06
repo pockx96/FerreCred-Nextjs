@@ -9,40 +9,30 @@ import {
 } from "@/components/ui/command";
 import { api } from "~/trpc/react";
 import { useState } from "react";
-import { Button } from "~/components/ui/button";
-import { Onest } from "next/font/google";
-
-interface Product {
-  code: string;
-  description: string;
-  weight: number;
-  price: number;
-}
+import { ProductType } from "~/server/api/routers/products";
 
 export function SearchBarProducts({
   onSelectProduct,
-  onTest,
 }: {
-  onSelectProduct: (product: Product) => void;
-  onTest: () => void;
+  onSelectProduct: (product: ProductType) => void;
 }) {
   const products = api.product.getAll.useQuery();
   const [isFocused, setIsFocused] = useState(false);
   return (
     <Command className="rounded-lg border shadow-md md:min-w-[450px]">
       <CommandInput
-        placeholder="Type a command or search..."
+        placeholder="Busque su producto..."
         onFocus={() => setIsFocused(true)}
       />
       <CommandList>
-        <CommandEmpty>No results found.</CommandEmpty>
+        <CommandEmpty>No se encontraron resultados.</CommandEmpty>
         <CommandGroup
           className={isFocused ? "" : "hidden"}
           heading="Sugerencias"
         >
           {products.data &&
             products.data.map((product) => (
-              <CommandItem key={product.code} onClick={onTest}>
+              <CommandItem key={product.code}>
                 <button
                   onClick={() => {
                     onSelectProduct(product);

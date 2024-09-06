@@ -1,15 +1,11 @@
-import { Description } from "@radix-ui/react-dialog";
-import { Weight } from "lucide-react";
 import { z } from "zod";
 
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 
-
-
 const codeSchema = z.object({ code: z.string() });
 const descriptionSchema = z.object({ description: z.string() });
 
-const productUpdateSchema = z.object({
+export const productSchema = z.object({
   code: z.string(),
   description: z.string(),
   stock: z.number(),
@@ -17,9 +13,9 @@ const productUpdateSchema = z.object({
   weight: z.number(),
 });
 
+export type ProductType = z.infer<typeof productSchema>;
 
 export const productRouter = createTRPCRouter({
-
   getAll: publicProcedure.query(({ ctx }) => {
     return ctx.db.product.findMany();
   }),
@@ -38,5 +34,5 @@ export const productRouter = createTRPCRouter({
         description: input.description,
       },
     });
-  })
+  }),
 });
