@@ -1,34 +1,52 @@
-import { Input } from "@/components/ui/input";
+"use client";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
+import { api } from "~/trpc/react";
+import { useState } from "react";
+import { ClientType } from "~/server/api/routers/client";
 
-export default function SeachBarClients() {
+export default function SearchBarClients({
+  onSelectClient,
+}: {
+  onSelectClient: (client: ClientType) => void;
+}) {
+  const clients = api.client.getAll.useQuery();
+  const [isFocused, setIsFocused] = useState(false);
+
   return (
-    <div className="flex h-3/4 w-1/2 items-center space-x-2 rounded-lg border border-gray-300 bg-gray-50 px-3.5 py-2 dark:bg-gray-900">
-      <SearchIcon className="h-4 w-4" />
-      <Input
-        type="search"
-        placeholder="Search"
-        className="w-full border-0 font-semibold"
+    <Command className="rounded-lg border shadow-md md:min-w-[450px]">
+      <CommandInput
+        placeholder="Busque su cliente..."
+        onFocus={() => setIsFocused(true)}
       />
-    </div>
+      <CommandList>
+        <CommandEmpty>No se encontraron resultados.</CommandEmpty>
+        <CommandGroup
+          className={isFocused ? "" : "hidden"}
+          heading="Sugerencias"
+        >
+          {clients.data &&
+            clients.data.map((client) => (
+              <CommandItem key={client.id}>
+                <button
+                  onClick={() => {
+                    onSelectClient(client);
+                    setIsFocused(false);
+                  }}
+                >
+                  {client.name}
+                </button>
+              </CommandItem>
+            ))}
+        </CommandGroup>
+      </CommandList>
+    </Command>
   );
 }
 
-function SearchIcon(props: any) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <circle cx="11" cy="11" r="8" />
-      <path d="m21 21-4.3-4.3" />
-    </svg>
-  );
-}

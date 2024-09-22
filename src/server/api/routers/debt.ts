@@ -63,4 +63,13 @@ export const debtRouter = createTRPCRouter({
       },
     });
   }),
+
+  getByClientId: publicProcedure.input(z.object({ clientId: z.number().int() })).query(({ input, ctx }) => {
+    return ctx.db.debt.findMany({
+      where: {
+        clientId: input.clientId,
+        isPaid: false,
+      },
+    });
+  }),
 });
