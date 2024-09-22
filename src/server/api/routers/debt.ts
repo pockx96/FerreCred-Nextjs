@@ -23,10 +23,10 @@ export const debtRouter = createTRPCRouter({
     return ctx.db.debt.findMany();
   }),
 
-  getOne: publicProcedure.input(z.object({ id: z.number().int() })).query(({ input, ctx }) => {
-    return ctx.db.debt.findUnique({
+  getByClientId: publicProcedure.input(z.object({ clientId: z.number().int() })).query(({ input, ctx }) => {
+    return ctx.db.debt.findMany({
       where: {
-        id: input.id,
+        clientId: input.clientId
       },
     });
   }),
@@ -60,15 +60,6 @@ export const debtRouter = createTRPCRouter({
     return ctx.db.debt.delete({
       where: {
         id: input.id,
-      },
-    });
-  }),
-
-  getByClientId: publicProcedure.input(z.object({ clientId: z.number().int() })).query(({ input, ctx }) => {
-    return ctx.db.debt.findMany({
-      where: {
-        clientId: input.clientId,
-        isPaid: false,
       },
     });
   }),
