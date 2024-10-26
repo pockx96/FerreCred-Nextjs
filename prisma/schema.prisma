@@ -62,7 +62,7 @@ model VerificationToken {
 
 model Product {
     ProductId   String @id
-    sale        Sale   @relation(fields: [code], references: [productSale])
+    sale        Sale   @relation(fields: [ProductId], references: [productSale])
     description String @unique
     stock       Int
     price       Float
@@ -75,10 +75,11 @@ model Sale {
     total       Decimal   @db.Decimal(10, 2)
     isCredit    Boolean // Indicates if the sale was on credit
     clientSale      Int // Relation to Client
-    productSale String
+    productSale String @unique
     Clietn        Client     @relation(fields: [clientSale], references: [ClientId])
     products    Product[]
     amount      Int
+    Debt Debt[]
 }
 
 model Client {
@@ -90,6 +91,7 @@ model Client {
     currentBalance Float
     email          String
     debts          Debt[] // Relation to debts
+    Sale Sale[]
 }
 
 model Debt {
@@ -97,7 +99,7 @@ model Debt {
     amount   Decimal @db.Decimal(10, 2)
     isPaid   Boolean @default(false) // Indicates if the debt is settled
     clientId Int // Relation to Client
-    client   Client  @relation(fields: [clientId], references: [id])
+    client   Client  @relation(fields: [clientId], references: [ClientId])
     saleId   Int? // Relation to Sale
     sale     Sale[]
 }
