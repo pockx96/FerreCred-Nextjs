@@ -14,8 +14,13 @@ import { useState } from "react";
 import { Separator } from "~/components/ui/separator";
 import { api } from "~/trpc/react";
 
-export function ButtonFinish() {
-  const subtotal = 100;
+type SellCartProps = {
+  totalPrice: number;
+  clearProducts: () => void;
+}; //Importaciones de sell-cart.tsx
+
+export function ButtonFinish({ totalPrice, clearProducts }: SellCartProps) {
+  const subtotal = totalPrice;
   const cashCloseId = 1;
   const [total, setTotal] = useState(subtotal);
   const [pay, setPay] = useState(0);
@@ -141,7 +146,7 @@ export function ButtonFinish() {
           <Separator className="bg-slate-500" />
           <div className="my-2 flex w-3/4 justify-between px-2">
             <h3 className="">{paySucces ? "Cambio" : "Faltante"}</h3>
-            <h3>${total}</h3>
+            <h3>${total.toFixed(2)}</h3>
           </div>
         </div>
         <AlertDialogFooter className="col-start-1 col-end-6">
@@ -151,6 +156,7 @@ export function ButtonFinish() {
           <AlertDialogAction
             disabled={!paySucces}
             onClick={() => {
+              clearProducts();
               handleCreateCashClose.mutate(saleCash);
             }}
             className="h-full w-1/4"

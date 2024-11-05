@@ -16,6 +16,8 @@ export const SellCart = () => {
     setSelectedProducts((prevProducts) => [...prevProducts, product]);
   };
 
+  const handleClearProducts = () => { setSelectedProducts([]); }; //Borra todo contenido de la tabla al finalizar una compra
+
   const totalPrice = useMemo(() => {
     return selectedProducts.reduce((sum, product) => sum + product.price, 0);
   }, [selectedProducts]);
@@ -35,7 +37,7 @@ export const SellCart = () => {
         </div>
       </div>
       <div className="flex h-2/5 justify-end">
-        <ButtonFinish />
+        <ButtonFinish totalPrice={totalPrice} clearProducts={handleClearProducts}/>
         <CardTotal total={totalPrice} />
       </div>
     </section>
