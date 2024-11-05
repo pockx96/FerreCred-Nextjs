@@ -1,11 +1,12 @@
-import { postRouter } from "~/server/api/routers/post"
-import { userRouter} from "~/server/api/routers/user"
-import { productRouter} from "~/server/api/routers/products"
-import { clientRouter} from "~/server/api/routers/client"
-import { saleRouter} from "~/server/api/routers/sale"
-import { debtRouter} from "~/server/api/routers/debt"
+import { postRouter } from "~/server/api/routers/post";
+import { userRouter } from "~/server/api/routers/user";
+import { productRouter } from "~/server/api/routers/products";
+import { clientRouter } from "~/server/api/routers/client";
+import { saleRouter } from "~/server/api/routers/sale";
+import { debtRouter } from "~/server/api/routers/debt";
 import { taskRouter } from "./routers/task";
 import { createCallerFactory, createTRPCRouter } from "~/server/api/trpc";
+import { cashRegisterCloseRouter } from "./routers/cash-register-close";
 
 /**
  * This is the primary router for your server.
@@ -19,7 +20,8 @@ export const appRouter = createTRPCRouter({
   product: productRouter,
   client: clientRouter,
   sale: saleRouter,
-  debt: debtRouter
+  debt: debtRouter,
+  cashClose: cashRegisterCloseRouter,
 });
 
 // export type definition of API

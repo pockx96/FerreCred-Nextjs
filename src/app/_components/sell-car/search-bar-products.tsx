@@ -32,7 +32,7 @@ export function SearchBarProducts({
         >
           {products.data &&
             products.data.map((product) => (
-              <CommandItem key={product.code}>
+              <CommandItem key={product.ProductId}>
                 <button
                   onClick={() => {
                     onSelectProduct(product);

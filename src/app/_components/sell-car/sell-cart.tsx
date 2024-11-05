@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo } from "react";
 import { SellTable } from "./sell-table";
 import { CardTotal } from "./card-total";
 import { CardClient } from "./card-client";
