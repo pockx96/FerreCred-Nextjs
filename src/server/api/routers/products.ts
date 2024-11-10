@@ -1,5 +1,4 @@
 import { z } from "zod";
-
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 
 const codeSchema = z.object({ code: z.string() });
@@ -35,4 +34,29 @@ export const productRouter = createTRPCRouter({
       },
     });
   }),
+
+  // Nueva mutación para actualizar el stock del producto
+  updateStock: publicProcedure
+    .input(z.object({
+      code: z.string(),
+      quantity: z.number()
+    }))
+    .mutation(async ({ input, ctx }) => {
+      const { code, quantity } = input;
+      // Encuentra el producto por el código
+      const product = await ctx.db.product.findUnique({
+        where: { code }
+      });
+
+      if (!product) {
+        throw new Error("Producto no encontrado");
+      }
+      // Actualiza el stock restando la cantidad vendida
+      return await ctx.db.product.update({
+        where: { code },
+        data: {
+          stock: product.stock - quantity,
+        },
+      });
+    }),
 });

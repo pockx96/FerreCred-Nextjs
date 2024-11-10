@@ -17,9 +17,10 @@ import { api } from "~/trpc/react";
 type SellCartProps = {
   totalPrice: number;
   clearProducts: () => void;
+  cashierName: string;
 }; //Importaciones de sell-cart.tsx
 
-export function ButtonFinish({ totalPrice, clearProducts }: SellCartProps) {
+export function ButtonFinish({ totalPrice, clearProducts, cashierName }: SellCartProps) {
   const subtotal = totalPrice;
   const cashCloseId = 1;
   const [total, setTotal] = useState(subtotal);
@@ -42,7 +43,7 @@ export function ButtonFinish({ totalPrice, clearProducts }: SellCartProps) {
   });
 
   const saleCashSchema = {
-    user: "test",
+    user: cashierName,
     efective: 0,
     dollar: 0,
     credit: 0,
