@@ -10,9 +10,10 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Separator } from "~/components/ui/separator";
 import { api } from "~/trpc/react";
+import { ProductsContext } from "./sell-cart";
 
 type SellCartProps = {
   totalPrice: number;
@@ -20,7 +21,11 @@ type SellCartProps = {
   cashierName: string;
 }; //Importaciones de sell-cart.tsx
 
-export function ButtonFinish({ totalPrice, clearProducts, cashierName }: SellCartProps) {
+export function ButtonFinish({
+  totalPrice,
+  clearProducts,
+  cashierName,
+}: SellCartProps) {
   const subtotal = totalPrice;
   const cashCloseId = 1;
   const [total, setTotal] = useState(subtotal);
@@ -31,14 +36,19 @@ export function ButtonFinish({ totalPrice, clearProducts, cashierName }: SellCar
 
   const utils = api.useUtils();
   const cashClose = api.cashClose.getOne.useQuery({ id: cashCloseId });
+  const selectProducts = useContext(ProductsContext);
 
+  const printArrayValues = () => {
+    console.log("legh array: " + selectProducts.length);
+    selectProducts.forEach((value) => console.log(value));
+  };
+  
   const handleCreateCashClose = api.cashClose.createCashRegister.useMutation({
     onSuccess: async () => {
       await utils.cashRegister.invalidate();
       setPaySucces(false);
       setPayTotal(0);
       setPay(0);
-      console.log(saleCash);
     },
   });
 
@@ -58,7 +68,7 @@ export function ButtonFinish({ totalPrice, clearProducts, cashierName }: SellCar
     setPay(value);
   };
 
-  const handlePayAdd  = () => {
+  const handlePayAdd = () => {
     setPayTotal((prevPayTotal) => {
       setSaleCash((prevSaleCash) => {
         const newSaleCash = { ...prevSaleCash }; // Copia el estado anterior de saleCash
@@ -67,8 +77,8 @@ export function ButtonFinish({ totalPrice, clearProducts, cashierName }: SellCar
             newSaleCash.efective = pay; // Sumar el nuevo pago al existente
             break;
           case "dollars":
-            setPay(pay*18);
-            newSaleCash.dollar = (pay); // Sumar el nuevo pago al existente
+            setPay(pay * 18);
+            newSaleCash.dollar = pay; // Sumar el nuevo pago al existente
             break;
           case "credit":
             newSaleCash.credit = pay; // Sumar el nuevo pago al existente
@@ -89,7 +99,7 @@ export function ButtonFinish({ totalPrice, clearProducts, cashierName }: SellCar
           return false;
         }
         return true;
-      });  
+      });
       return newPayTotal;
     });
   };

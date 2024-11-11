@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   Table,
   TableBody,
@@ -7,35 +7,28 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { ProductsContext } from "./sell-cart";
 
 interface Product {
   code: string;
   description: string;
-  stock:  number;
+  stock: number;
   weight: number;
   price: number;
 }
 
 interface SellTableProps {
-  products: Product[];
   onQuantityChange: (total: number) => void;
 }
 
-export function SellTable({ products, onQuantityChange }: SellTableProps) {
-  const [quantities, setQuantities] = useState<number[]>(Array(products.length).fill(1));
+export function SellTable({ onQuantityChange }: SellTableProps) {
+  const [quantity, setQuantity] = useState(1);
+  const products = useContext(ProductsContext);
 
-  const handleQuantityChange = (index: number, value: number) => {
-    const updatedQuantities = [...quantities];
-    updatedQuantities[index] = value;
-    setQuantities(updatedQuantities);
-    const newTotal = calculateTotal(products, updatedQuantities);
-    onQuantityChange(newTotal);
-  };
-
-  const calculateTotal = (products: Product[], quantities: number[]) => {
-    return products.reduce((acc, product, index) => {
-      return acc + product.price * quantities[index];
-    }, 0);
+  const calculateTotal = (productIndex: number, amount: number) => {
+    const product = products[productIndex];
+    const newPrice = product.price * amount;
+    return newPrice;
   };
 
   return (
@@ -58,17 +51,19 @@ export function SellTable({ products, onQuantityChange }: SellTableProps) {
               <TableCell>
                 <input
                   type="number"
-                  value={quantities[index]}
-                  onChange={(e) =>
-                    handleQuantityChange(index, parseInt(e.target.value) || 1)
-                  }
+                  value={quantity}
+                  onChange={(e) => {
+                    const value = parseInt(e.target.value) || 1;
+                    setQuantity(value);
+                    calculateTotal(index, value);
+                  }}
                   style={{ width: "40px", textAlign: "center" }}
                 />
               </TableCell>
               <TableCell>{product.description}</TableCell>
               <TableCell className="text-right">{product.weight}g</TableCell>
-              <TableCell>${product.price}</TableCell>
-              <TableCell>${(product.price * quantities[index]).toFixed(2)}</TableCell>
+              <TableCell>${product.price.toFixed(2)}</TableCell>
+              <TableCell>${(product.price * quantity).toFixed(2)}</TableCell>
             </TableRow>
           ))
         ) : (
