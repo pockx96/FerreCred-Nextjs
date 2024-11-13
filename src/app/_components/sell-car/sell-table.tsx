@@ -27,6 +27,7 @@ export function SellTable({ onQuantityChange }: SellTableProps) {
 
   const calculateTotal = (productIndex: number, amount: number) => {
     const product = products[productIndex];
+    product.stock = amount;
     const newPrice = product.price * amount;
     return newPrice;
   };

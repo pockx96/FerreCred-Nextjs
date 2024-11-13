@@ -14,6 +14,7 @@ import { useContext, useState } from "react";
 import { Separator } from "~/components/ui/separator";
 import { api } from "~/trpc/react";
 import { ProductsContext } from "./sell-cart";
+import { date } from "zod";
 
 type SellCartProps = {
   totalPrice: number;
@@ -27,21 +28,22 @@ export function ButtonFinish({
   cashierName,
 }: SellCartProps) {
   const subtotal = totalPrice;
-  const cashCloseId = 1;
   const [total, setTotal] = useState(subtotal);
   const [pay, setPay] = useState(0);
   const [payTotal, setPayTotal] = useState(0);
   const [paySucces, setPaySucces] = useState(false);
   const [payMethod, setPayMethod] = useState("efective");
-
-  const utils = api.useUtils();
-  const cashClose = api.cashClose.getOne.useQuery({ id: cashCloseId });
   const selectProducts = useContext(ProductsContext);
 
-  const printArrayValues = () => {
-    console.log("legh array: " + selectProducts.length);
-    selectProducts.forEach((value) => console.log(value));
-  };
+  const utils = api.useUtils();
+  const cashes = api.cashClose.getAll.useQuery();
+  const productsInventory = api.product.getAll.useQuery();
+
+  let now: Date =  new Date();
+  const year = now.getFullYear();   
+  const month = now.getMonth();
+  const day =  now.getDate(); 
+  const nowDate: Date = new Date(year, month, day);
   
   const handleCreateCashClose = api.cashClose.createCashRegister.useMutation({
     onSuccess: async () => {
@@ -51,6 +53,52 @@ export function ButtonFinish({
       setPay(0);
     },
   });
+
+  const handleCreateSale = api.sale.create.useMutation({
+    onSuccess: async () => {
+      await utils.sale.invalidate();
+    },
+  });
+
+  const handleInventory = ()=>{
+    for(const productInventory of productsInventory){
+      for(const product of selectProducts ){
+        if (product.code == productInventory.code){
+          const discount = product.stock;
+          productInventory.stock -= discount;
+          //Falta Actualizar BD//
+        }
+      }
+    }
+    
+  }
+
+  const handleSale = ()=>{
+      const newsale{
+        date:nowDate,
+        totalAmount:
+
+      }
+      for (const product of selectProducts){
+        newsale.product = product
+        handleCreateSale(newsale);
+      }
+  }
+
+
+  const HandleCashClose =(String:cashUpdate)=>{
+
+    for (const cash of cashes) {
+      if (cash.date !== nowDate) {
+        handleCreateCashClose.mutate({cash})
+        break; // Termina el loop al encontrar el primer elemento que cumple la condición
+      }
+      else{
+        cash = cashUpdate;
+      }
+    }
+    
+  }
 
   const saleCashSchema = {
     user: cashierName,
@@ -71,7 +119,7 @@ export function ButtonFinish({
   const handlePayAdd = () => {
     setPayTotal((prevPayTotal) => {
       setSaleCash((prevSaleCash) => {
-        const newSaleCash = { ...prevSaleCash }; // Copia el estado anterior de saleCash
+        const newSaleCash = { ...prevSaleCash };
         switch (payMethod) {
           case "efective":
             newSaleCash.efective = pay; // Sumar el nuevo pago al existente
@@ -103,6 +151,12 @@ export function ButtonFinish({
       return newPayTotal;
     });
   };
+
+
+
+  const SellFinish = ()=>{
+    
+  }
 
   return (
     <AlertDialog>

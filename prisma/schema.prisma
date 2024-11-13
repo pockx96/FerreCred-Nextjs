@@ -124,10 +124,11 @@ model PurchaseOrder {
 }
 
 model CashRegisterClose {
-    CashRegisterCloseid Int    @id @default(autoincrement())
+    CashRegisterCloseid Int      @id @default(autoincrement())
     user                String
     efective            Float
     dollar              Float
     credit              Float
     debit               Float
+    date                DateTime
 }

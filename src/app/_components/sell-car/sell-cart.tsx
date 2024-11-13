@@ -9,18 +9,17 @@ import { CardDebt } from "./card-debt";
 import { ButtonFinish } from "./button-finish";
 import { SearchBarProducts } from "./search-bar-products";
 import { ProductType } from "~/server/api/routers/products";
+import { api } from "~/trpc/react";
 
 // Crear contexto para almacenar productos seleccionados
 export const ProductsContext = createContext<ProductType[]>([]);
+export const cashierName = createContext("John Doe");
 
 export const SellCart = () => {
   const [selectedProducts, setSelectedProducts] = useState<ProductType[]>([]);
   const [totalPrice, setTotalPrice] = useState<number>(0);
-  const selectedProductsContext = useContext(ProductsContext);
 
-  const printArrayValues = () => {
-    selectedProducts.forEach((value) => console.log(value));
-  };
+
 
   const handleSelectProduct = async (product: ProductType) => {
     setSelectedProducts((prevProducts) => [...prevProducts, product]);
@@ -35,7 +34,8 @@ export const SellCart = () => {
     setTotalPrice(newTotal);
   }, []);
 
-  const cashierName = "John Doe";
+
+
 
   return (
     <ProductsContext.Provider value={selectedProducts}>

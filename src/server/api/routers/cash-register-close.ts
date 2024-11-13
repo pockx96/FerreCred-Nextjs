@@ -10,6 +10,7 @@ const CashCloseSchema = z.object({
   dollar: z.number(),
   credit: z.number(),
   debit: z.number(),
+  date: z.date()
 });
 
 export const cashRegisterCloseRouter = createTRPCRouter({
@@ -38,6 +39,7 @@ export const cashRegisterCloseRouter = createTRPCRouter({
           dollar: input.dollar,
           credit: input.credit,
           debit: input.debit,
+          date: input.date
         },
       });
     }),
