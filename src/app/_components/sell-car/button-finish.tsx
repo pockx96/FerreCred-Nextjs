@@ -15,6 +15,7 @@ import { Separator } from "~/components/ui/separator";
 import { api } from "~/trpc/react";
 import { ProductsContext } from "./sell-cart";
 import { date } from "zod";
+import { productRouter } from "~/server/api/routers/products";
 
 type SellCartProps = {
   totalPrice: number;
@@ -37,7 +38,8 @@ export function ButtonFinish({
 
   const utils = api.useUtils();
   const cashes = api.cashClose.getAll.useQuery();
-  const productsInventory = api.product.getAll.useQuery();
+  //Datos dentro del Query
+  const { data: productsInventory} = api.product.getAll.useQuery();
 
   let now: Date =  new Date();
   const year = now.getFullYear();   
@@ -60,24 +62,45 @@ export function ButtonFinish({
     },
   });
 
-  const handleInventory = ()=>{
-    for(const productInventory of productsInventory){
-      for(const product of selectProducts ){
-        if (product.code == productInventory.code){
+  const handleInventory = async () => {
+    for (const productInventory of productsInventory) {
+      for (const product of selectProducts) {
+        if (product.code == productInventory.ProductId) {
           const discount = product.stock;
           productInventory.stock -= discount;
-          //Falta Actualizar BD//
+  
+          // Actualizar BD
+          await updateProductInventory(productInventory.ProductId, productInventory.stock);
         }
       }
     }
-    
-  }
+  };
+  
+  const updateProductInventory = async (code: string, newStock: number) => {
+    try {
+      await productRouter.update({
+        input: {
+          code,
+          newStock,
+        },
+        ctx: undefined,
+        getRawInput: function (): Promise<unknown> {
+          throw new Error("Function not implemented.");
+        },
+        path: "",
+        type: "query"
+      });
+      console.log(`Stock del producto actualizado: ${code}`);
+    } catch (error) {
+      console.error(`Error al actualizar el producto con código ${code}`, error);
+    }
+  };
+
 
   const handleSale = ()=>{
       const newsale{
         date:nowDate,
         totalAmount:
-
       }
       for (const product of selectProducts){
         newsale.product = product
