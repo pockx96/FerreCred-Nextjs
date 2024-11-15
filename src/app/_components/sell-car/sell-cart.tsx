@@ -19,8 +19,6 @@ export const SellCart = () => {
   const [selectedProducts, setSelectedProducts] = useState<ProductType[]>([]);
   const [totalPrice, setTotalPrice] = useState<number>(0);
 
-
-
   const handleSelectProduct = async (product: ProductType) => {
     setSelectedProducts((prevProducts) => [...prevProducts, product]);
   };
@@ -33,9 +31,6 @@ export const SellCart = () => {
   const handleQuantityChange = useCallback((newTotal: number) => {
     setTotalPrice(newTotal);
   }, []);
-
-
-
 
   return (
     <ProductsContext.Provider value={selectedProducts}>
@@ -56,7 +51,6 @@ export const SellCart = () => {
           <ButtonFinish
             totalPrice={totalPrice}
             clearProducts={handleClearProducts}
-            cashierName={cashierName}
           />
           <CardTotal total={totalPrice} />
         </div>

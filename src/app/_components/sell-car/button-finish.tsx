@@ -14,20 +14,16 @@ import { useContext, useState } from "react";
 import { Separator } from "~/components/ui/separator";
 import { api } from "~/trpc/react";
 import { ProductsContext } from "./sell-cart";
+import { CashType } from "~/server/api/routers/cash-register-close";
 import { date } from "zod";
 import { productRouter } from "~/server/api/routers/products";
 
 type SellCartProps = {
   totalPrice: number;
   clearProducts: () => void;
-  cashierName: string;
 }; //Importaciones de sell-cart.tsx
 
-export function ButtonFinish({
-  totalPrice,
-  clearProducts,
-  cashierName,
-}: SellCartProps) {
+export function ButtonFinish({ totalPrice, clearProducts }: SellCartProps) {
   const subtotal = totalPrice;
   const [total, setTotal] = useState(subtotal);
   const [pay, setPay] = useState(0);
@@ -37,16 +33,52 @@ export function ButtonFinish({
   const selectProducts = useContext(ProductsContext);
 
   const utils = api.useUtils();
-  const cashes = api.cashClose.getAll.useQuery();
-  //Datos dentro del Query
-  const { data: productsInventory} = api.product.getAll.useQuery();
 
-  let now: Date =  new Date();
-  const year = now.getFullYear();   
+  const cashesCloseQuery = api.cashClose.getAll.useQuery();
+
+  let now: Date = new Date();
+  const year = now.getFullYear();
   const month = now.getMonth();
-  const day =  now.getDate(); 
+  const day = now.getDate();
   const nowDate: Date = new Date(year, month, day);
-  
+
+  /// INVENTORY GESTION ///
+
+  const handleInventory = async () => {
+    const productsInventoryQuery = api.product.getAll.useQuery();
+    const productsInventory = productsInventoryQuery.data;
+
+    if (!productsInventory) {
+      alert("No se pudo cargar el inventario");
+      return;
+    }
+
+    try {
+      for (const productInventory of productsInventory) {
+        for (const product of selectProducts) {
+          if (product.ProductId == productInventory.ProductId) {
+            const discount = product.stock;
+            productInventory.stock -= discount;
+            updateProductInventory.mutate({
+              ProductId: productInventory.ProductId,
+              newStock: productInventory.stock,
+            });
+          }
+        }
+      }
+    } catch (e) {
+      alert("Error al actualizar el inventario");
+    }
+  };
+
+  const updateProductInventory = api.product.update.useMutation({
+    onSuccess: async () => {
+      await utils.product.invalidate();
+    },
+  });
+
+  /// CASH GESTION ////
+
   const handleCreateCashClose = api.cashClose.createCashRegister.useMutation({
     onSuccess: async () => {
       await utils.cashRegister.invalidate();
@@ -56,81 +88,67 @@ export function ButtonFinish({
     },
   });
 
+  const HandleCashClose = (cashUpdate: CashType) => {
+    alert("working funcion cash");
+    const cashesClose = cashesCloseQuery.data;
+    if (!cashesClose) {
+      alert("No se pudo cargar el efectivo en caja");
+      return;
+    }
+    if (cashesClose.length === 0) {
+      handleCreateCashClose.mutate({
+        CashRegisterCloseid: saleCash.CashRegisterCloseid,
+        user: saleCash.user,
+        efective: saleCash.efective,
+        dollar: saleCash.dollar,
+        credit: saleCash.credit,
+        debit: saleCash.debit,
+        date: saleCash.date,
+      });
+    }
+
+    for (let cash of cashesClose) {
+      let i = 1;
+      console.log(i + ": " + cash);
+      if (cash.date !== nowDate) {
+        handleCreateCashClose.mutate({
+          CashRegisterCloseid: cash.CashRegisterCloseid,
+          user: cash.user,
+          efective: cash.efective,
+          dollar: cash.dollar,
+          credit: cash.credit,
+          debit: cash.debit,
+          date: cash.date,
+        });
+        alert("Se creo el corte" + cash);
+        break; // Termina el loop al encontrar el primer elemento que cumple la condición
+      } else {
+        cash = cashUpdate;
+        alert("Se actualizo el corte" + cash);
+      }
+      i++;
+    }
+  };
+
+  /// SALE GESTION ///
   const handleCreateSale = api.sale.create.useMutation({
     onSuccess: async () => {
       await utils.sale.invalidate();
     },
   });
 
-  const handleInventory = async () => {
-    for (const productInventory of productsInventory) {
-      for (const product of selectProducts) {
-        if (product.code == productInventory.ProductId) {
-          const discount = product.stock;
-          productInventory.stock -= discount;
-  
-          // Actualizar BD
-          await updateProductInventory(productInventory.ProductId, productInventory.stock);
-        }
-      }
-    }
-  };
-  
-  const updateProductInventory = async (code: string, newStock: number) => {
-    try {
-      await productRouter.update({
-        input: {
-          code,
-          newStock,
-        },
-        ctx: undefined,
-        getRawInput: function (): Promise<unknown> {
-          throw new Error("Function not implemented.");
-        },
-        path: "",
-        type: "query"
-      });
-      console.log(`Stock del producto actualizado: ${code}`);
-    } catch (error) {
-      console.error(`Error al actualizar el producto con código ${code}`, error);
-    }
-  };
-
-
-  const handleSale = ()=>{
-      const newsale{
-        date:nowDate,
-        totalAmount:
-      }
-      for (const product of selectProducts){
-        newsale.product = product
-        handleCreateSale(newsale);
-      }
-  }
-
-
-  const HandleCashClose =(String:cashUpdate)=>{
-
-    for (const cash of cashes) {
-      if (cash.date !== nowDate) {
-        handleCreateCashClose.mutate({cash})
-        break; // Termina el loop al encontrar el primer elemento que cumple la condición
-      }
-      else{
-        cash = cashUpdate;
-      }
-    }
-    
-  }
-
   const saleCashSchema = {
-    user: cashierName,
+    CashRegisterCloseid: 1,
+    user: "testing",
     efective: 0,
     dollar: 0,
     credit: 0,
     debit: 0,
+    date: nowDate,
   };
   const [saleCash, setSaleCash] = useState(saleCashSchema);
+
+  /// PAY GESTION ///
 
   const isSelected = (method: string) => payMethod === method;
 
@@ -174,12 +192,6 @@ export function ButtonFinish({
       return newPayTotal;
     });
   };
-
-
-
-  const SellFinish = ()=>{
-    
-  }
 
   return (
     <AlertDialog>
@@ -245,7 +257,7 @@ export function ButtonFinish({
             disabled={!paySucces}
             onClick={() => {
               clearProducts();
-              handleCreateCashClose.mutate(saleCash);
+              HandleCashClose(saleCash);
             }}
             className="h-full w-1/4"
           >

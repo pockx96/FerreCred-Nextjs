@@ -4,7 +4,10 @@ import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 
 const idSchema = z.object({ id: z.number() });
 
+export type CashType = z.infer<typeof CashCloseSchema>;
+
 const CashCloseSchema = z.object({
+  CashRegisterCloseid: z.number(),
   user: z.string(),
   efective: z.number(),
   dollar: z.number(),
