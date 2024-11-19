@@ -36,11 +36,11 @@ export function ButtonFinish({ totalPrice, clearProducts }: SellCartProps) {
 
   const cashesCloseQuery = api.cashClose.getAll.useQuery();
 
-  let now: Date = new Date();
-  const year = now.getFullYear();
-  const month = now.getMonth();
-  const day = now.getDate();
-  const nowDate: Date = new Date(year, month, day);
+  let date: Date = new Date();
+  const day = String(date.getDate()).padStart(2, "0"); // Día (2 dígitos)
+  const month = String(date.getMonth() + 1).padStart(2, "0"); // Mes (2 dígitos, +1 porque los meses comienzan en 0)
+  const year = date.getFullYear(); // Año completo
+  const actualDate = `${day}-${month}-${year}`;
 
   /// INVENTORY GESTION ///
 
@@ -78,6 +78,11 @@ export function ButtonFinish({ totalPrice, clearProducts }: SellCartProps) {
   });
 
   /// CASH GESTION ////
+  const handleUpdateCashClose = api.cashClose.update.useMutation({
+    onSuccess: async () => {
+      await utils.cashClose.invalidate();
+    },
+  });
 
   const handleCreateCashClose = api.cashClose.createCashRegister.useMutation({
     onSuccess: async () => {
@@ -89,13 +94,15 @@ export function ButtonFinish({ totalPrice, clearProducts }: SellCartProps) {
   });
 
   const HandleCashClose = (cashUpdate: CashType) => {
-    alert("working funcion cash");
     const cashesClose = cashesCloseQuery.data;
+
     if (!cashesClose) {
       alert("No se pudo cargar el efectivo en caja");
+      console.log("cashes close" + cashesClose + cashesCloseQuery);
       return;
     }
-    if (cashesClose.length === 0) {
+    if (cashesClose.length == 0) {
+      console.log("primer corte, " + cashesClose.length);
       handleCreateCashClose.mutate({
         CashRegisterCloseid: saleCash.CashRegisterCloseid,
         user: saleCash.user,
@@ -105,28 +112,38 @@ export function ButtonFinish({ totalPrice, clearProducts }: SellCartProps) {
         debit: saleCash.debit,
         date: saleCash.date,
       });
-    }
-
-    for (let cash of cashesClose) {
-      let i = 1;
-      console.log(i + ": " + cash);
-      if (cash.date !== nowDate) {
-        handleCreateCashClose.mutate({
-          CashRegisterCloseid: cash.CashRegisterCloseid,
-          user: cash.user,
-          efective: cash.efective,
-          dollar: cash.dollar,
-          credit: cash.credit,
-          debit: cash.debit,
-          date: cash.date,
-        });
-        alert("Se creo el corte" + cash);
-        break; // Termina el loop al encontrar el primer elemento que cumple la condición
-      } else {
-        cash = cashUpdate;
-        alert("Se actualizo el corte" + cash);
+      console.log("corte creado");
+    } else {
+      for (let cash of cashesClose) {
+        let i = 1;
+        console.log(i + ": " + cash);
+        if (cash.date !== actualDate) {
+          handleCreateCashClose.mutate({
+            CashRegisterCloseid: saleCash.CashRegisterCloseid,
+            user: saleCash.user,
+            efective: saleCash.efective,
+            dollar: saleCash.dollar,
+            credit: saleCash.credit,
+            debit: saleCash.debit,
+            date: saleCash.date,
+          });
+          console.log("corte creado");
+          break; // Termina el loop al encontrar el primer elemento que cumple la condición
+        } else {
+          handleUpdateCashClose.mutate({
+            CashRegisterCloseid: cashUpdate.CashRegisterCloseid,
+            user: cashUpdate.user,
+            efective: cash.efective + cashUpdate.efective,
+            credit: cash.credit + cashUpdate.credit,
+            dollar: cash.dollar + cashUpdate.dollar,
+            debit: cash.debit + cashUpdate.debit,
+            date: cashUpdate.date,
+          });
+          console.log("corte actualizado");
+          break;
+        }
+        i++;
       }
-      i++;
     }
   };
 
@@ -144,7 +161,7 @@ export function ButtonFinish({ totalPrice, clearProducts }: SellCartProps) {
     dollar: 0,
     credit: 0,
     debit: 0,
-    date: nowDate,
+    date: actualDate,
   };
   const [saleCash, setSaleCash] = useState(saleCashSchema);
 
@@ -254,7 +271,7 @@ export function ButtonFinish({ totalPrice, clearProducts }: SellCartProps) {
             Cancelar
           </AlertDialogCancel>
           <AlertDialogAction
-            disabled={!paySucces}
+            //disabled={!paySucces}
             onClick={() => {
               clearProducts();
               HandleCashClose(saleCash);

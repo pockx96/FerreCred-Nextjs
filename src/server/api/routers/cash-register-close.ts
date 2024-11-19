@@ -13,12 +13,16 @@ const CashCloseSchema = z.object({
   dollar: z.number(),
   credit: z.number(),
   debit: z.number(),
-  date: z.date()
+  date: z.string(),
 });
 
 export const cashRegisterCloseRouter = createTRPCRouter({
   getAll: publicProcedure.query(({ ctx }) => {
-    return ctx.db.cashRegisterClose.findMany();
+    return ctx.db.cashRegisterClose.findMany({
+      orderBy: {
+        CashRegisterCloseid: "desc", // Ordena de mayor a menor
+      },
+    });
   }),
 
   getOne: publicProcedure.input(idSchema).query(({ input, ctx }) => {
@@ -26,6 +30,15 @@ export const cashRegisterCloseRouter = createTRPCRouter({
       where: {
         CashRegisterCloseid: input.id,
       },
+    });
+  }),
+
+  update: publicProcedure.input(CashCloseSchema).mutation(({ input, ctx }) => {
+    return ctx.db.cashRegisterClose.update({
+      where: {
+        CashRegisterCloseid: input.CashRegisterCloseid,
+      },
+      data: CashCloseSchema.parse(input),
     });
   }),
 
@@ -42,7 +55,7 @@ export const cashRegisterCloseRouter = createTRPCRouter({
           dollar: input.dollar,
           credit: input.credit,
           debit: input.debit,
-          date: input.date
+          date: input.date,
         },
       });
     }),
