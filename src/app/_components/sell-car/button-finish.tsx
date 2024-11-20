@@ -15,8 +15,6 @@ import { Separator } from "~/components/ui/separator";
 import { api } from "~/trpc/react";
 import { ProductsContext } from "./sell-cart";
 import { CashType } from "~/server/api/routers/cash-register-close";
-import { date } from "zod";
-import { productRouter } from "~/server/api/routers/products";
 
 type SellCartProps = {
   totalPrice: number;
@@ -164,6 +162,16 @@ export function ButtonFinish({ totalPrice, clearProducts }: SellCartProps) {
     date: actualDate,
   };
   const [saleCash, setSaleCash] = useState(saleCashSchema);
+
+  const handleSale =()=>{
+    for(const product of selectProducts){
+      handleCreateSale.mutate({
+        date: ,
+
+
+      });
+    } 
+  }
 
   /// PAY GESTION ///
 

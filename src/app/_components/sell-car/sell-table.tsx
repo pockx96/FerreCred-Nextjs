@@ -27,8 +27,8 @@ export function SellTable({ onQuantityChange }: SellTableProps) {
 
   const calculateTotal = (productIndex: number, amount: number) => {
     const product = products[productIndex];
-    product.stock = amount;
     const newPrice = product.price * amount;
+    console.log("precio en tabla"+newPrice);
     return newPrice;
   };
 
@@ -48,7 +48,7 @@ export function SellTable({ onQuantityChange }: SellTableProps) {
         {products.length > 0 ? (
           products.map((product, index) => (
             <TableRow key={index}>
-              <TableCell>{product.code}</TableCell>
+              <TableCell>{product.ProductId}</TableCell>
               <TableCell>
                 <input
                   type="number"

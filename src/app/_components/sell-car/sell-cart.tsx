@@ -9,7 +9,6 @@ import { CardDebt } from "./card-debt";
 import { ButtonFinish } from "./button-finish";
 import { SearchBarProducts } from "./search-bar-products";
 import { ProductType } from "~/server/api/routers/products";
-import { api } from "~/trpc/react";
 
 // Crear contexto para almacenar productos seleccionados
 export const ProductsContext = createContext<ProductType[]>([]);
@@ -21,6 +20,10 @@ export const SellCart = () => {
 
   const handleSelectProduct = async (product: ProductType) => {
     setSelectedProducts((prevProducts) => [...prevProducts, product]);
+    setTotalPrice((prevTotalPrice) => {
+      const newTotal = prevTotalPrice + product.price;
+      return newTotal;
+    });
   };
 
   const handleClearProducts = () => {
@@ -31,6 +34,12 @@ export const SellCart = () => {
   const handleQuantityChange = useCallback((newTotal: number) => {
     setTotalPrice(newTotal);
   }, []);
+
+  const calculateTotal = () => {
+    const selectProducts = useContext(ProductsContext);
+    const total = selectProducts.reduce((sum, item) => sum + item.price, 0);
+    setTotalPrice(total);
+  };
 
   return (
     <ProductsContext.Provider value={selectedProducts}>

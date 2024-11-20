@@ -8,7 +8,7 @@ const decimalSchema = z
   });
 
 const saleSchema = z.object({
-  id: z.number().int().positive().optional(),
+  saleId: z.number().int().positive().optional(),
   date: z.date().optional(),
   total: decimalSchema,
   methodPay: z.string(),
