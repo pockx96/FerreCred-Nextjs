@@ -35,32 +35,6 @@ export const saleRouter = createTRPCRouter({
     }),
 
   create: publicProcedure.input(saleSchema).mutation(({ input, ctx }) => {
-    const newClient: ClientType = {
-      name: "Juan Pérez", // Nombre obligatorio
-      address: "Calle Falsa 123", // Dirección obligatoria
-      phone: "555-1234", // Teléfono obligatorio
-      creditLimit: 10000.0, // Límite de crédito
-      currentBalance: 2500.0, // Saldo actual
-      email: "juan.perez@example.com", // Email válido
-      debts: [
-        // Array opcional de deudas
-        {
-          id: 1, // ID opcional
-          amount: 500.0, // Monto de la deuda
-          isPaid: false, // Estado de la deuda
-          clientId: 1, // Relación opcional con el cliente
-          saleId: 101, // Relación opcional con la venta
-        },
-        {
-          id: 2,
-          amount: 1500.0,
-          isPaid: true,
-          clientId: 1,
-          saleId: 102,
-        },
-      ],
-    };
-
     return ctx.db.sale.create({
       data: {
         SaleId: input.saleId,
