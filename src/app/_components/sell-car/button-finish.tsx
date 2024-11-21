@@ -163,15 +163,18 @@ export function ButtonFinish({ totalPrice, clearProducts }: SellCartProps) {
   };
   const [saleCash, setSaleCash] = useState(saleCashSchema);
 
-  const handleSale =()=>{
-    for(const product of selectProducts){
+  const handleSale = () => {
+    for (const product of selectProducts) {
       handleCreateSale.mutate({
-        date: ,
-
-
+        saleId: "f001",
+        date: actualDate,
+        clientSale: 1,
+        methodPay: "efective",
+        productSale: product.description,
+        total: subtotal,
       });
-    } 
-  }
+    }
+  };
 
   /// PAY GESTION ///
 
@@ -283,6 +286,7 @@ export function ButtonFinish({ totalPrice, clearProducts }: SellCartProps) {
             onClick={() => {
               clearProducts();
               HandleCashClose(saleCash);
+              handleSale();
             }}
             className="h-full w-1/4"
           >

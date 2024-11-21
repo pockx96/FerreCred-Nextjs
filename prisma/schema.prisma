@@ -66,23 +66,16 @@ model Product {
     stock       Int
     price       Float
     weight      Float
-    Sale        Sale?   @relation(fields: [saleSaleId], references: [SaleId])
     saleSaleId  String?
 }
 
 model Sale {
-    SaleId         String    @id
-    date           DateTime  @default(now())
-    total          Decimal   @db.Decimal(10, 2)
-    methodPay      String // Indicates if the sale was on credit
-    clientSale     Int // Relation to Client
-    productSale    String
-    amount         Int
-    Product        Product[]
-    Client         Client?   @relation(fields: [clientClientId], references: [ClientId])
-    clientClientId Int?
-    Debt           Debt?     @relation(fields: [debtDebtId], references: [DebtId])
-    debtDebtId     Int?
+    SaleId      String  @id
+    date        String
+    total       Decimal @db.Decimal(10, 2)
+    methodPay   String // Indicates if the sale was on credit
+    clientSale  Int // Relation to Client
+    productSale String
 }
 
 model Client {
@@ -94,7 +87,6 @@ model Client {
     currentBalance Float
     email          String
     debts          Debt[] // Relation to debts
-    Sale           Sale[]
 }
 
 model Debt {
@@ -104,7 +96,6 @@ model Debt {
     clientId Int // Relation to Client
     client   Client  @relation(fields: [clientId], references: [ClientId])
     saleId   Int? // Relation to Sale
-    sale     Sale[]
 }
 
 model Provider {
