@@ -15,6 +15,7 @@ const saleSchema = z.object({
   methodPay: z.string(),
   clientSale: z.number().int().positive(),
   productSale: z.string(),
+  saleTicket: z.string(),
 });
 
 export type SaleType = z.infer<typeof saleSchema>;
@@ -34,7 +35,7 @@ export const saleRouter = createTRPCRouter({
       });
     }),
 
-  create: publicProcedure.input(saleSchema).mutation(({ input, ctx }) => {
+  create: publicProcedure.input(saleSchema).mutation(({ ctx, input }) => {
     return ctx.db.sale.create({
       data: {
         SaleId: input.saleId,
@@ -43,6 +44,7 @@ export const saleRouter = createTRPCRouter({
         methodPay: input.methodPay,
         clientSale: input.clientSale,
         productSale: input.productSale,
+        saleTicket: input.saleTicket,
       },
     });
   }),

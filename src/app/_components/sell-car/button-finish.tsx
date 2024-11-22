@@ -33,6 +33,7 @@ export function ButtonFinish({ totalPrice, clearProducts }: SellCartProps) {
   const utils = api.useUtils();
 
   const cashesCloseQuery = api.cashClose.getAll.useQuery();
+  const salesQuery = api.sale.getAll.useQuery();
 
   let date: Date = new Date();
   const day = String(date.getDate()).padStart(2, "0"); // Día (2 dígitos)
@@ -164,17 +165,28 @@ export function ButtonFinish({ totalPrice, clearProducts }: SellCartProps) {
   const [saleCash, setSaleCash] = useState(saleCashSchema);
 
   const handleSale = () => {
-    for (const product of selectProducts) {
-      handleCreateSale.mutate({
-        saleId: "f001",
-        date: actualDate,
-        clientSale: 1,
-        methodPay: "efective",
-        productSale: product.description,
-        total: subtotal,
+    const sales = salesQuery.data ?? []; // Si `sales` es undefined, lo tratamos como un array vacío
+    const baseLength = sales.length > 0 ? sales.length : 1; // Si el length es 0, usar 1
+    const saleTicket = "Tk-" + baseLength;
+  
+    try {
+      selectProducts.forEach((product, index) => {
+        const saleId = "Sd-" + (baseLength + index);
+        handleCreateSale.mutate({
+          saleId: saleId,
+          date: actualDate,
+          clientSale: 1,
+          methodPay: "efective",
+          productSale: product.description,
+          total: product.price,
+          saleTicket: saleTicket,
+        });
       });
+    } catch {
+      alert("Imposible consultar las ventas en la base de datos");
     }
   };
+  
 
   /// PAY GESTION ///
 
