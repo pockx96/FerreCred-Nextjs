@@ -11,8 +11,7 @@ import {
 } from "~/components/ui/card";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
-import { Check, Link } from "lucide-react";
-
+import { signIn } from "next-auth/react"
 
 
 export function LoginForm() {
@@ -44,10 +43,7 @@ export function LoginForm() {
           </form>
         </CardContent>
         <CardFooter className="flex flex-col">
-          <Button className="bg-primary-orange mb-5 w-full">
-            <Check className="mr-2 h-4 w-4" /> Iniciar
-          </Button>
-          <CardDescription>Olvide mi contraseña</CardDescription>
+        <button onClick={() => signIn('google', { callbackUrl: '/home' })}>Sign in with Google</button>
         </CardFooter>
       </Card>
   );
