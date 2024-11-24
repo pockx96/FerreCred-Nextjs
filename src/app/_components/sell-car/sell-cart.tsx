@@ -19,6 +19,7 @@ export const SellCart = () => {
   const [totalPrice, setTotalPrice] = useState<number>(0);
 
   const handleSelectProduct = async (product: ProductType) => {
+    product.stock = 1;
     setSelectedProducts((prevProducts) => [...prevProducts, product]);
     setTotalPrice((prevTotalPrice) => {
       const newTotal = prevTotalPrice + product.price;

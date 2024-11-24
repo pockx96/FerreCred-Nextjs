@@ -42,9 +42,9 @@ export function ButtonFinish({ totalPrice, clearProducts }: SellCartProps) {
   const actualDate = `${day}-${month}-${year}`;
 
   /// INVENTORY GESTION ///
+  const productsInventoryQuery = api.product.getAll.useQuery();
 
   const handleInventory = async () => {
-    const productsInventoryQuery = api.product.getAll.useQuery();
     const productsInventory = productsInventoryQuery.data;
 
     if (!productsInventory) {
@@ -55,12 +55,12 @@ export function ButtonFinish({ totalPrice, clearProducts }: SellCartProps) {
     try {
       for (const productInventory of productsInventory) {
         for (const product of selectProducts) {
-          if (product.ProductId == productInventory.ProductId) {
+          if (product.ProductId === productInventory.ProductId) {
             const discount = product.stock;
-            productInventory.stock -= discount;
+            const newStock = productInventory.stock-discount;
             updateProductInventory.mutate({
               ProductId: productInventory.ProductId,
-              newStock: productInventory.stock,
+              newStock: newStock,
             });
           }
         }
@@ -168,7 +168,7 @@ export function ButtonFinish({ totalPrice, clearProducts }: SellCartProps) {
     const sales = salesQuery.data ?? []; // Si `sales` es undefined, lo tratamos como un array vacío
     const baseLength = sales.length > 0 ? sales.length : 1; // Si el length es 0, usar 1
     const saleTicket = "Tk-" + baseLength;
-  
+
     try {
       selectProducts.forEach((product, index) => {
         const saleId = "Sd-" + (baseLength + index);
@@ -186,7 +186,6 @@ export function ButtonFinish({ totalPrice, clearProducts }: SellCartProps) {
       alert("Imposible consultar las ventas en la base de datos");
     }
   };
-  
 
   /// PAY GESTION ///
 
@@ -296,9 +295,10 @@ export function ButtonFinish({ totalPrice, clearProducts }: SellCartProps) {
           <AlertDialogAction
             //disabled={!paySucces}
             onClick={() => {
-              clearProducts();
-              HandleCashClose(saleCash);
-              handleSale();
+              //clearProducts();
+              //HandleCashClose(saleCash);
+              //handleSale();
+              handleInventory();
             }}
             className="h-full w-1/4"
           >
