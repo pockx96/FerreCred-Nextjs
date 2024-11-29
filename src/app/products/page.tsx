@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { useState } from "react";
 import AdminPanelLayout from "../_components/admin-panel/admin-panel-layout";
 import { CreateProduct } from "../_components/products/create-products";
@@ -7,20 +7,18 @@ import SelectMenu from "../_components/products/selectmenu";
 import { Menu } from "../_components/admin-panel/menu";
 
 const LoginPage = () => {
-  const [menu,setMenu] = useState("nuevo");
+  const [menu, setMenu] = useState("nuevo");
   const handleSelectProduct = (menuSelect: string) => {
     setMenu(menuSelect);
   };
 
   return (
     <AdminPanelLayout>
-      <main className="w-full bg-blue-400">
-        <NavigationMenuProduct onSelectMenu={handleSelectProduct } />
-        <SelectMenu menuSelect={menu}/>
+      <main className="w-full">
+        <NavigationMenuProduct onSelectMenu={handleSelectProduct} />
+        <SelectMenu menuSelect={menu} />
       </main>
     </AdminPanelLayout>
   );
 };
 export default LoginPage;
-
-
