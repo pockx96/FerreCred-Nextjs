@@ -8,7 +8,6 @@ import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -16,8 +15,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { toast } from "~/hooks/use-toast";
-import { Section } from "lucide-react";
-import { Separator } from "~/components/ui/separator";
+import { TableProvider } from "./table-provider";
 
 const FormSchema = z.object({
   username: z.string().min(2, {
@@ -45,12 +43,21 @@ export function CreateProvider() {
   }
 
   return (
-    <section className="ml-4 mt-4 w-1/3 text-3xl">
+    <section className="ml-4 mt-4 flex w-3/4 bg-slate-400 text-3xl">
+      <TableProvider />
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="w-2/3 space-y-6"
+          className="w-2/3 space-y-6 bg-green-400 px-4"
         >
+          <div className="flex justify-around bg-red-500">
+            <Button className="" type="submit">
+              Nuevo Proveedor
+            </Button>
+            <Button>Eliminar</Button>
+            <Button>Guardar</Button>
+          </div>
+
           <FormField
             control={form.control}
             name="username"
@@ -76,9 +83,6 @@ export function CreateProvider() {
               </FormItem>
             )}
           />
-          <Button className="w-3/4" type="submit">
-            Guardar
-          </Button>
         </form>
       </Form>
     </section>

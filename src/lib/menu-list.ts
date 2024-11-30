@@ -45,6 +45,13 @@ export function getMenuList(pathname: string): Group[] {
       groupLabel: "Adminstracion",
       menus: [
         {
+          href: "/accounts",
+          label: "Abonos",
+          active: pathname.includes("/categories"),
+          icon: Bookmark,
+          submenus: [],
+        },
+        {
           href: "/products",
           label: "Productos",
           active: pathname.includes("/posts"),
