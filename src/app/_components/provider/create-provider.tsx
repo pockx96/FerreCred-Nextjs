@@ -48,9 +48,9 @@ export function CreateProvider() {
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="w-2/3 space-y-6 bg-green-400 px-4"
+          className="w-2/3 space-y-6 px-4"
         >
-          <div className="flex justify-around bg-red-500">
+          <div className="flex justify-around">
             <Button className="" type="submit">
               Nuevo Proveedor
             </Button>

@@ -82,7 +82,7 @@ export function ButtonFinish({ totalPrice, clearProducts }: SellCartProps) {
       await utils.cashClose.invalidate();
     },
   });
-
+ 
   const handleCreateCashClose = api.cashClose.createCashRegister.useMutation({
     onSuccess: async () => {
       await utils.cashRegister.invalidate();

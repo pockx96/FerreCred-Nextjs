@@ -7,7 +7,7 @@ import SelectMenu from "../_components/products/selectmenu";
 import { Menu } from "../_components/admin-panel/menu";
 
 const LoginPage = () => {
-  const [menu, setMenu] = useState("nuevo");
+  const [menu, setMenu] = useState("");
   const handleSelectProduct = (menuSelect: string) => {
     setMenu(menuSelect);
   };

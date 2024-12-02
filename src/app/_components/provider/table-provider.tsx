@@ -83,7 +83,7 @@ export const TableProvider = () => {
     return icoName;
   };
   return (
-    <section className="mr-20 w-full bg-red-400">
+    <section className="mr-20 w-full">
       <Table>
         <TableRow>
           <TableHead> </TableHead>
@@ -93,10 +93,10 @@ export const TableProvider = () => {
         <TableBody>
           {providers.length > 0 ? (
             providers.map((provider, index) => (
-              <TableRow className="h-20">
+              <TableRow className="h-24 py-2">
                 <TableCell
                   colSpan={2}
-                  className="rounded-full bg-blue-500 py-2"
+                  className="mt-2 rounded-full bg-blue-500 text-center"
                 >
                   {handleIconame(provider.empresa)}
                 </TableCell>

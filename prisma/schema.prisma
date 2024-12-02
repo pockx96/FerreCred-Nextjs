@@ -59,7 +59,9 @@ model Product {
   ProductId   String  @id
   description String  @unique
   stock       Int
-  price       Float
+  priceBuy    Float
+  priceSale   Float
+  unit        String
   weight      Float
   saleSaleId  String?
 }

@@ -14,6 +14,8 @@ export default function SelectMenu({ menuSelect }: { menuSelect: string }) {
         return <KardexProduct />;
       case "inventario":
         return <InventoryProduct />;
+      case "":
+        return <h1>holi</h1>;
     }
   };
   return <div>{renderContent()}</div>;

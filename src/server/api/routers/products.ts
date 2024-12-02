@@ -1,3 +1,4 @@
+import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 
@@ -13,8 +14,10 @@ export const productSchema = z.object({
   ProductId: z.string(),
   description: z.string(),
   stock: z.number(),
-  price: z.number(),
+  priceSale: z.number(),
+  priceBuy:  z.number(),
   weight: z.number(),
+  unit: z.string()
 });
 
 export type ProductType = z.infer<typeof productSchema>;
@@ -37,6 +40,27 @@ export const productRouter = createTRPCRouter({
       where: {
         description: input.description,
       },
+    });
+  }),
+
+  createProduct: publicProcedure
+  .input(productSchema)
+  .mutation(async ({ ctx, input }) => {
+    // simulate a slow db call
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+
+    const exists = await ctx.db.product.findUnique({
+      where: input 
+    });
+
+    if (exists) {
+      throw new TRPCError({
+        code: "BAD_REQUEST",
+        message: "El valor ingresado ya existe.",
+      });
+    }
+    return ctx.db.product.create({
+      data: input
     });
   }),
 

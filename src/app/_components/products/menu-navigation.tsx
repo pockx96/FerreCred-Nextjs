@@ -37,6 +37,11 @@ export function NavigationMenuProduct({
             Inventario
           </NavigationMenuTrigger>
         </NavigationMenuItem>
+        <NavigationMenuItem>
+          <NavigationMenuTrigger onClick={() => onSelectMenu("nuevo")}>
+            test
+          </NavigationMenuTrigger>
+        </NavigationMenuItem>
       </NavigationMenuList>
     </NavigationMenu>
   );
