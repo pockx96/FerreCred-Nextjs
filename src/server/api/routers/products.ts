@@ -1,26 +1,6 @@
 import { TRPCError } from "@trpc/server";
-import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
-
-const codeSchema = z.object({ ProductId: z.string() });
-const descriptionSchema = z.object({ description: z.string() });
-
-const updateStockSchema = z.object({
-  ProductId: z.string(),
-  newStock: z.number(),
-});
-
-export const productSchema = z.object({
-  ProductId: z.string(),
-  description: z.string(),
-  stock: z.number(),
-  priceSale: z.number(),
-  priceBuy:  z.number(),
-  weight: z.number(),
-  unit: z.string()
-});
-
-export type ProductType = z.infer<typeof productSchema>;
+import { codeSchema, descriptionSchema, productSchema, updateStockSchema } from "../../../validations/productSchema";
 
 export const productRouter = createTRPCRouter({
   getAll: publicProcedure.query(({ ctx }) => {
@@ -43,9 +23,7 @@ export const productRouter = createTRPCRouter({
     });
   }),
 
-  createProduct: publicProcedure
-  .input(productSchema)
-  .mutation(async ({ ctx, input }) => {
+  createProduct: publicProcedure.input(productSchema).mutation(async ({ ctx, input }) => {
     // simulate a slow db call
     await new Promise((resolve) => setTimeout(resolve, 1000));
 

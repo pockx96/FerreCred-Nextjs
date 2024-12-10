@@ -1,19 +1,7 @@
-import { z } from "zod";
-
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
-
-
-
-const idSchema = z.object({ id: z.number() });
-
-const userUpdateSchema = z.object({
-  id: z.number(),
-  name: z.string(),
-});
-
+import { idSchema, userUpdateSchema, userCreateSchema } from "../../../validations/userSchema";
 
 export const userRouter = createTRPCRouter({
-
   getAll: publicProcedure.query(({ ctx }) => {
     return ctx.db.user.findMany();
   }),
@@ -27,7 +15,7 @@ export const userRouter = createTRPCRouter({
   }),
 
   createUser: publicProcedure
-    .input(z.object({ name: z.string().min(1) }))
+    .input(userCreateSchema)
     .mutation(async ({ ctx, input }) => {
       // simulate a slow db call
       await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -49,7 +37,6 @@ export const userRouter = createTRPCRouter({
         data: userUpdateSchema.parse(input),
       });
     }),
-
 
   deleteUser: publicProcedure
     .input(z.object({ nameToDelete: z.string().min(1) }))

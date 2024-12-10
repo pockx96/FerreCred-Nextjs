@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/command";
 import { api } from "~/trpc/react";
 import { useState } from "react";
-import { ProductType } from "~/server/api/routers/products";
+import { ProductType } from "../../../validations/productSchema";
 
 export function SearchBarProducts({
   onSelectProduct,

@@ -2,7 +2,7 @@
 
 import { useState, useContext, useCallback, createContext } from "react";
 import React from "react";
-import { ProductType } from "~/server/api/routers/products";
+import { ProductType } from "../../../validations/productSchema";
 import { SearchBarProducts } from "../sell-car/search-bar-products";
 import { CardTotal } from "../sell-car/card-total";
 import { OrderTable } from "./order-table";

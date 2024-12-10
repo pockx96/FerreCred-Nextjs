@@ -7,7 +7,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Separator } from "~/components/ui/separator";
-import { ClientType } from "~/server/api/routers/client";
+import { ClientType } from "../../../validations/clientSchema";
 
 export function AccountCard({ client, totalDebt }: { client: ClientType | null, totalDebt: number }) {
   if (!client) {

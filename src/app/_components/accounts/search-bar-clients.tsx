@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/command";
 import { api } from "~/trpc/react";
 import { useState } from "react";
-import { ClientType } from "~/server/api/routers/client";
+import { ClientType } from "../../../validations/clientSchema";
 
 export default function SearchBarClients({
   onSelectClient,

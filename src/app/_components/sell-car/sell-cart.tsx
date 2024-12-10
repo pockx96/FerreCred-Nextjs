@@ -8,7 +8,7 @@ import { CardClient } from "./card-client";
 import { CardDebt } from "./card-debt";
 import { ButtonFinish } from "./button-finish";
 import { SearchBarProducts } from "./search-bar-products";
-import { ProductType } from "~/server/api/routers/products";
+import { ProductType } from "../../../validations/productSchema";
 
 // Crear contexto para almacenar productos seleccionados
 export const ProductsContext = createContext<ProductType[]>([]);

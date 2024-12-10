@@ -6,7 +6,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { DebtType } from "~/server/api/routers/debt";
+import { DebtType } from "../../../validations/debtSchema";
 
 export function AccountTable({ debts }: { debts: DebtType[] }) {
   return (

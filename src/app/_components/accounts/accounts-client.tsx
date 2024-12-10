@@ -6,7 +6,7 @@ import { AccountCard } from "./account-card";
 import { AccountTable } from "./account-table";
 import SearchBarClients from "./search-bar-clients";
 import { Button } from "~/components/ui/button";
-import { ClientType } from "~/server/api/routers/client";
+import { ClientType } from "../../../validations/clientSchema";
 import { api } from "~/trpc/react";
 
 export const AccountClient = () => {

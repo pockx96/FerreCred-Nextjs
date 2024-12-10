@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Separator } from "~/components/ui/separator";
-import { ProductType, productSchema } from "~/server/api/routers/products"; // Asegúrate de importar ProductType y productSchema
+import { ProductType, productSchema } from "../../../validations/productSchema"; // Actualiza esta línea de importación
 import { api } from "~/trpc/react";
 
 export function CreateProduct() {

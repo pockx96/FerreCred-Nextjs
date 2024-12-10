@@ -1,24 +1,8 @@
-import { z } from "zod";
+
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
+import { saleSchema, decimalSchema } from "../../../validations/saleSchema";
+import { z } from "zod";
 import { ClientType } from "./client";
-
-const decimalSchema = z
-  .number()
-  .refine((value) => parseFloat(value.toFixed(2)), {
-    message: "El número debe tener hasta 2 decimales",
-  });
-
-const saleSchema = z.object({
-  saleId: z.string(),
-  date: z.string(),
-  total: decimalSchema,
-  methodPay: z.string(),
-  clientSale: z.number().int().positive(),
-  productSale: z.string(),
-  saleTicket: z.string(),
-});
-
-export type SaleType = z.infer<typeof saleSchema>;
 
 export const saleRouter = createTRPCRouter({
   getAll: publicProcedure.query(({ ctx }) => {
