@@ -9,12 +9,24 @@ export const updateStockSchema = z.object({
 });
 
 export const productSchema = z.object({
-  ProductId: z.string(),
-  description: z.string(),
-  stock: z.number(),
-  priceSale: z.number(),
-  priceBuy: z.number(),
-  weight: z.number(),
+  ProductId: z.string().min(3, {
+    message: "Debe tener al menos más de 3 caracteres",
+  }),
+  description: z.string().min(3, {
+    message: "Debe tener al menos más de 3 caracteres",
+  }),
+  stock: z.string().refine((stock) => !isNaN(parseInt(stock)), {
+    message: "Debe ser un valor numérico",
+  }),
+  priceSale: z.string().refine((priceSale) => !isNaN(parseFloat(priceSale)), {
+    message: "Debe ser un valor numérico",
+  }),
+  priceBuy: z.string().refine((priceBuy) => !isNaN(parseFloat(priceBuy)), {
+    message: "Debe ser un valor numérico",
+  }),
+  weight: z.string().refine((weight) => !isNaN(parseFloat(weight)), {
+    message: "Debe ser un valor numérico",
+  }),
   unit: z.string(),
 });
 
