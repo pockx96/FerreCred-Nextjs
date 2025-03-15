@@ -3,11 +3,7 @@ import AdminPanelLayout from "./_components/admin-panel/admin-panel-layout";
 import { getServerAuthSession } from "~/server/auth";
 import { api, HydrateClient } from "~/trpc/server";
 
-export default async function Home({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default async function Home() {
   const session = await getServerAuthSession();
   const hello = await api.post.hello({ text: "from tRPC" });
   return (
