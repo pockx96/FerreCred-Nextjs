@@ -1,5 +1,10 @@
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
-import { idSchema, userUpdateSchema, userCreateSchema } from "../../../validations/userSchema";
+import {
+  idSchema,
+  userUpdateSchema,
+  userCreateSchema,
+} from "../../../validations/userSchema";
+import { z } from "zod";
 
 export const userRouter = createTRPCRouter({
   getAll: publicProcedure.query(({ ctx }) => {
