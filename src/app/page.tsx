@@ -24,7 +24,7 @@ export default async function Home() {
   const session: Session | null = await getServerAuthSession();
   if (session) {
     let user = (session.user?.name ?? "dafaultuser").replace(/\s+/g, ""); // Asignar el resultado
-    const urlRef = `http://green-mallard-910012.hostingersite.com/`;
+    const urlRef = `https://${user}.ferrecred.com/#/creditos`;
     console.log(urlRef);
     return <RedirectToExternal url={urlRef} />;
   }
