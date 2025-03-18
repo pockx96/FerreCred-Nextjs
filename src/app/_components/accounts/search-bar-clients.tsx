@@ -33,7 +33,7 @@ export default function SearchBarClients({
         >
           {clients.data &&
             clients.data.map((client) => (
-              <CommandItem key={client.id}>
+              <CommandItem key={client.name}>
                 <button
                   onClick={() => {
                     onSelectClient(client);
@@ -49,5 +49,3 @@ export default function SearchBarClients({
     </Command>
   );
 }
-
-
