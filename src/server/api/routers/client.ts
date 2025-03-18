@@ -1,5 +1,9 @@
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
-import { idSchema, nameSchema, clientSchema } from "../../../validations/clientSchema";
+import {
+  idSchema,
+  nameSchema,
+  clientSchema,
+} from "../../../validations/clientSchema";
 
 export const clientRouter = createTRPCRouter({
   getAll: publicProcedure.query(({ ctx }) => {
@@ -9,7 +13,7 @@ export const clientRouter = createTRPCRouter({
   getOne: publicProcedure.input(idSchema).query(({ input, ctx }) => {
     return ctx.db.product.findUnique({
       where: {
-        code: input.id,
+        ProductId: input.id,
       },
     });
   }),

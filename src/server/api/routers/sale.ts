@@ -2,7 +2,6 @@
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 import { saleSchema, decimalSchema } from "../../../validations/saleSchema";
 import { z } from "zod";
-import { ClientType } from "./client";
 
 export const saleRouter = createTRPCRouter({
   getAll: publicProcedure.query(({ ctx }) => {

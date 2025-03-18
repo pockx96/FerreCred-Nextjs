@@ -1,5 +1,13 @@
 import { createEnv } from "@t3-oss/env-nextjs";
 import { z } from "zod";
+const envSchema = z.object({
+  DATABASE_URL: z.string(),
+  NODE_ENV: z.enum(["development", "test", "production"]),
+  GOOGLE_CLIENT_ID: z.string(),
+  GOOGLE_CLIENT_SECRET: z.string(),
+});
+
+
 
 export const env = createEnv({
   /**

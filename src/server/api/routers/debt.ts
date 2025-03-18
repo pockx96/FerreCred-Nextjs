@@ -7,13 +7,15 @@ export const debtRouter = createTRPCRouter({
     return ctx.db.debt.findMany();
   }),
 
-  getByClientId: publicProcedure.input(z.object({ clientId: z.number().int() })).query(({ input, ctx }) => {
-    return ctx.db.debt.findMany({
-      where: {
-        clientId: input.clientId
-      },
-    });
-  }),
+  getByClientId: publicProcedure
+    .input(z.object({ clientId: z.number().int() }))
+    .query(({ input, ctx }) => {
+      return ctx.db.debt.findMany({
+        where: {
+          clientId: input.clientId,
+        },
+      });
+    }),
 
   create: publicProcedure.input(debtSchema).mutation(({ input, ctx }) => {
     return ctx.db.debt.create({
@@ -29,7 +31,7 @@ export const debtRouter = createTRPCRouter({
   update: publicProcedure.input(debtSchema).mutation(({ input, ctx }) => {
     return ctx.db.debt.update({
       where: {
-        id: input.id,
+        DebtId: input.id,
       },
       data: {
         amount: input.amount,
@@ -40,11 +42,13 @@ export const debtRouter = createTRPCRouter({
     });
   }),
 
-  delete: publicProcedure.input(z.object({ id: z.number().int() })).mutation(({ input, ctx }) => {
-    return ctx.db.debt.delete({
-      where: {
-        id: input.id,
-      },
-    });
-  }),
+  delete: publicProcedure
+    .input(z.object({ id: z.number().int() }))
+    .mutation(({ input, ctx }) => {
+      return ctx.db.debt.delete({
+        where: {
+          DebtId: input.id,
+        },
+      });
+    }),
 });

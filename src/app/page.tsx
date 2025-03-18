@@ -18,13 +18,13 @@ import LoginButton from "./_components/login/login-button";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import RedirectToExternal from "./_components/redirect-to-external";
+import { Session } from "next-auth";
 
 export default async function Home() {
-  const session = await getServerAuthSession();
-
+  const session: Session | null = await getServerAuthSession();
   if (session) {
-    let user = session.user.name.replace(/\s+/g, ""); // Asignar el resultado
-    const urlRef = `https://www.${user}.ferrecred.com`;
+    let user = (session.user?.name ?? "dafaultuser").replace(/\s+/g, ""); // Asignar el resultado
+    const urlRef = `http://green-mallard-910012.hostingersite.com/`;
     console.log(urlRef);
     return <RedirectToExternal url={urlRef} />;
   }
@@ -54,11 +54,6 @@ export default async function Home() {
               <div className="grid w-full items-center gap-4">
                 <div className="flex flex-col items-center gap-2">
                   <div className="flex flex-col items-center justify-center gap-4">
-                    <p className="text-center text-2xl text-white">
-                      {session && (
-                        <span>Logged in as {session.user?.name}</span>
-                      )}
-                    </p>
                     {session ? (
                       <Link
                         href="/api/auth/signout"
@@ -73,9 +68,6 @@ export default async function Home() {
                 </div>
               </div>
               <div className="flex flex-col items-center justify-center gap-4">
-                <p className="text-center text-2xl text-white">
-                  {session && <span>Logged in as {session.user?.name}</span>}
-                </p>
                 <Link
                   href={session ? "/api/auth/signout" : "/api/auth/signin"}
                   className="rounded-full bg-white/10 px-10 py-3 font-semibold no-underline transition hover:bg-white/20"
