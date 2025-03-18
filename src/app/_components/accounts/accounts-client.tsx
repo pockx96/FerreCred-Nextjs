@@ -13,16 +13,17 @@ export const AccountClient = () => {
   const [selectedClient, setSelectedClient] = useState<ClientType | null>(null);
   const debtsQuery = api.debt.getByClientId.useQuery(
     { clientId: selectedClient?.id ?? 0 },
-    { enabled: !!selectedClient }
+    { enabled: !!selectedClient },
   );
 
-  const debts = debtsQuery.data?.map(debt => ({
-    ...debt,
-    amount: parseFloat(debt.amount.toString()), // Convertir Decimal a number
-  })) ?? [];
+  const debts =
+    debtsQuery.data?.map((debt) => ({
+      ...debt,
+      amount: parseFloat(debt.amount.toString()), // Convertir Decimal a number
+    })) ?? [];
 
   // Filtrar deudas no pagadas
-  const unpaidDebts = debts.filter(debt => !debt.isPaid);
+  const unpaidDebts = debts.filter((debt) => !debt.isPaid);
 
   // Calcular la deuda total de las deudas no pagadas
   const totalDebt = unpaidDebts.reduce((sum, debt) => sum + debt.amount, 0);
@@ -39,9 +40,7 @@ export const AccountClient = () => {
         <AccountCard client={selectedClient} totalDebt={totalDebt} />
       </div>
       <div className="my-2 flex w-full justify-start px-2">
-        <div className="w-full">
-          <AccountTable debts={debts} />
-        </div>
+        <div className="w-full"></div>
       </div>
       <div className="mt-20 flex h-2/5 items-center justify-end">
         <Button className="mr-4 h-3/4 w-1/12 rounded-xl bg-slate-600 text-sm font-bold">
